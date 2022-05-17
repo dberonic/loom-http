@@ -30,35 +30,24 @@ public class ThreadsHttp {
      * @throws IOException I/O exception
      * @throws InterruptedException Thread sleep
      */
+    
+    
+    
+    
     private static void handleRequestThread(HttpExchange exchange) throws IOException, InterruptedException{
        Runnable runnable = new Runnable() {
            @Override
            public void run() {
                //creates new Duke object
-               Duke duke = new Duke(1, "Duke", 20.0, 'A', true);
+                   Duke duke = new Duke(1, "Duke", 20.0, 'A', true);
+                   BufferedWriter bw = new BufferedWriter(new FileWriter(new File("duke.csv")));
 
-               //writes data into a file
-               BufferedWriter bw = null;
-               try {
-                   bw = new BufferedWriter(new FileWriter(new File("duke.csv")));
+                   bw.write(duke.getId() + ", " + duke.getName());
 
-                   bw.write(duke.getId() + ", " + duke.getName() + ", " + duke.getHeight() + ", " + duke.getCategory() + ", " + duke.isHasGadgets());
-                   bw.flush();
-                   bw.close();
-
-                   //returns the object to the user
-                   // response message
                    String response = duke.getName();
                    exchange.sendResponseHeaders(200, response.getBytes().length);
-
                    OutputStream os = exchange.getResponseBody();
                    os.write(response.getBytes());
-                   os.flush();
-                   os.close();
-               }
-               catch (IOException e) {
-                   e.printStackTrace();
-               }
            }
        };
 
